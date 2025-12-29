@@ -109,13 +109,14 @@ class Ghost {
         if (frameCounter >= moveDelay) {
             frameCounter = 0;
             
-            // on essaye de continuer dans la meme direction
+            // Choisir la meilleure direction à chaque mouvement
+            chooseSmartDirection();
             if (canMove(row + dirRow, col + dirCol)) {
                 row += dirRow;
                 col += dirCol;
             } else {
-                // si on peut pas continuer, on choisit une nouvelle direction intelligente
-                chooseSmartDirection();
+                // Si bloqué, essayer une direction aléatoire
+                chooseRandomDirection();
                 if (canMove(row + dirRow, col + dirCol)) {
                     row += dirRow;
                     col += dirCol;
