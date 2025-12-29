@@ -85,15 +85,8 @@ class Board {
                             strokeWeight(3);
                             line(x, y + CELL_SIZE/2, x + CELL_SIZE, y + CELL_SIZE/2);
                         break ;
-
-                        // case PACMAN :
-                        //     fill(255,255,0);
-                        //     noStroke();
-                        //     ellipse(x + CELL_SIZE/2, y + CELL_SIZE/2 , CELL_SIZE - 4, CELL_SIZE- 4);
-                        // break ; 
-                        
                         default :
-                
+                        // Rien
                         break ; 
                     }
                 }

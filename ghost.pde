@@ -8,20 +8,22 @@ class Ghost {
     
     private Board board;
     private Game game;
+    private Hero hero;
     private color ghostColor;
     private int startRow, startCol;
     private boolean isEaten = false;
     private int respawnTimer = 0;
     
-    Ghost(Board board, Game game, int startRow, int startCol, color c) {
+    Ghost(Board board, Game game, Hero hero, int startRow, int startCol, color c) {
         this.board = board;
         this.game = game;
+        this.hero = hero;
         this.row = startRow;
         this.col = startCol;
         this.startRow = startRow;
         this.startCol = startCol;
         this.ghostColor = c;
-        chooseRandomDirection();
+        chooseSmartDirection();
     }
     
     int getRow() {
@@ -33,11 +35,7 @@ class Ghost {
     }
     
     boolean canMove(int newRow, int newCol) {
-        if (newRow < 0 || newRow >= board.getRows() || newCol < 0 || newCol >= board.getCols()) {
-            return false;
-        }
-        TypeCell cell = board.grid[newRow][newCol];
-        return cell != TypeCell.WALL;
+        return isValidMove(board, newRow, newCol);
     }
     
     void chooseRandomDirection() {
@@ -52,7 +50,50 @@ class Ghost {
         }
     }
     
-    void update() { //TODO enhance moving logic 
+    void chooseSmartDirection() {
+        int heroRow = hero.getRow();
+        int heroCol = hero.getCol();
+        
+        // Utiliser Dijkstra pour calculer les distances
+        int[][] dist = computeDistances(board, heroRow, heroCol);
+        
+        // directions possibles
+        int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        float bestValue = isFrightened() ? -Float.MAX_VALUE : Float.MAX_VALUE;
+        int bestDir = -1;
+        
+        for (int i = 0; i < dirs.length; i++) {
+            int newRow = row + dirs[i][0];
+            int newCol = col + dirs[i][1];
+            
+            // eviter de revenir en arriere immediatement
+            if (dirs[i][0] == -dirRow && dirs[i][1] == -dirCol) continue;
+            
+            if (canMove(newRow, newCol)) {
+                float value = dist[newRow][newCol];
+                if (isFrightened()) {
+                    if (value > bestValue) {
+                        bestValue = value;
+                        bestDir = i;
+                    }
+                } else {
+                    if (value < bestValue) {
+                        bestValue = value;
+                        bestDir = i;
+                    }
+                }
+            }
+        }
+        
+        if (bestDir != -1) {
+            dirRow = dirs[bestDir][0];
+            dirCol = dirs[bestDir][1];
+        } else {
+            chooseRandomDirection();
+        }
+    }
+    
+    void update() {
         // si le fantome est mange, on attend avant de respawn
         if(isEaten){
             respawnTimer--;
@@ -73,16 +114,11 @@ class Ghost {
                 row += dirRow;
                 col += dirCol;
             } else {
-                // si on peut pas continuer, on choisit une nouvelle direction
-                int attempts = 0;
-                while (attempts < 10) {
-                    chooseRandomDirection();
-                    if (canMove(row + dirRow, col + dirCol)) {
-                        row += dirRow;
-                        col += dirCol;
-                        break;
-                    }
-                    attempts++;
+                // si on peut pas continuer, on choisit une nouvelle direction intelligente
+                chooseSmartDirection();
+                if (canMove(row + dirRow, col + dirCol)) {
+                    row += dirRow;
+                    col += dirCol;
                 }
             }
         }
@@ -97,11 +133,11 @@ class Ghost {
         int x = col * CELL_SIZE;
         int y = row * CELL_SIZE;
         
-        // Choisit la couleur du fantome en fonction de son statut
+            // Choisit la couleur du fantome en fonction de son statut
         // si on est en power mode, les fantomes deviennent bleus 
         if(game.isPowerMode()){
             if(game.getPowerModeFrames() < 90 && frameCount % 20 < 10){
-                fill(255, 255, 255); // blanc quand ca clignote
+                fill(255, 255, 255); // blanc quand ça clignote
             } else {
                 fill(0, 0, 255); // bleu en mode frightened
             }

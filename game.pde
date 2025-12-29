@@ -3,9 +3,9 @@ class Game {
     private int lives;
     private boolean gameOver;
     private int powerModeFrames = 0;
-    private final int POWER_MODE_DURATION = 300; // 5 secondes de power mode
-
-    Game(){
+    Board board;
+    Game(Board board){
+        this.board = board;
         score = START_SCORE;
         lives = START_LIVES;
         gameOver = false;
@@ -15,9 +15,6 @@ class Game {
     }
     int getLives(){
         return lives;
-    }
-    boolean isGameOver(){
-        return gameOver;
     }
     boolean isPowerMode(){
         return powerModeFrames > 0;
@@ -43,10 +40,61 @@ class Game {
         score += points;
     }
     void reset(){
+        // reset le jeu
         score = START_SCORE;
         lives = START_LIVES;
         gameOver = false;
         powerModeFrames = 0;
     }
+
+    boolean isGameOver(){
+        return gameOver;
+    }
+    boolean isGameWin(){
+        return board.getRemainingGommes() == 0;
+    }
+    void displayGameOverWin() {
+    fill(0, 0, 0, 200);
+    rect(0, 0, width, height);
+
+    // texte VICTOIRE
+    fill(0, 255, 0);
+    textAlign(CENTER, CENTER);
+    textSize(64);
+    text("VICTOIRE!", width/2, height/2 - 50);
+
+    // score final
+    fill(255);
+    textSize(32);
+    text("Score Final: " + game.getScore(), width/2, height/2 + 30);
+
+    // instructions pour recommencer
+    textSize(20);
+    text("Appuyez sur R pour rejouer", width/2, height/2 + 80);
+
+    textAlign(LEFT, BASELINE);
+    }
+
+    void displayGameOverLose(){
+        fill(0, 0, 0, 200);
+        rect(0, 0, width, height);
+        
+        // texte GAME OVER
+        fill(255, 0, 0);
+        textAlign(CENTER, CENTER);
+        textSize(64);
+        text("GAME OVER", width/2, height/2 - 50);
+        
+        // score final
+        fill(255);
+        textSize(32);
+        text("Score Final: " + game.getScore(), width/2, height/2 + 30);
+        
+        // instructions pour recommencer
+        textSize(20);
+        text("Appuyez sur R pour rejouer", width/2, height/2 + 80);
+        
+        textAlign(LEFT, BASELINE);
+    }   
 
 }

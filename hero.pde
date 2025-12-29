@@ -60,12 +60,7 @@ class Hero {
     }
 
     boolean canMove(int newRow , int newCol){
-        // on verifie si la nouvelle position est valide
-        if (  newRow < 0 || newRow >= board.getRows()  || newCol < 0 || newCol >= board.getCols() ) {
-            return false ;
-        }
-        // on peut pas traverser les murs 
-        return board.grid[newRow][newCol] != TypeCell.WALL;
+        return isValidMove(board, newRow, newCol);
     }
 
    void setDirection(int rowDir, int colDir){
@@ -170,10 +165,30 @@ class Hero {
         
         int x = col * CELL_SIZE;
         int y = row * CELL_SIZE;
+        int centerX = x + CELL_SIZE/2;
+        int centerY = y + CELL_SIZE/2;
+        int radius = (CELL_SIZE - 4) / 2;
         
-        // on dessine pacman 
+        // animation de la bouche
+        float mouthSize = abs(sin(frameCount * 0.1f));
+        
+        // on dessine pacman comme un cercle jaune avec une bouche noire
         fill(255, 255, 0);
         noStroke();
-        ellipse(x + CELL_SIZE/2, y + CELL_SIZE/2, CELL_SIZE - 4, CELL_SIZE - 4);
+        ellipse(centerX, centerY, CELL_SIZE - 4, CELL_SIZE - 4);
+        
+        // bouche noire
+        fill(0);
+        noStroke();
+        if (dirCol == 1) { // droite
+            triangle(centerX, centerY, centerX + radius, centerY - radius * mouthSize, centerX + radius, centerY + radius * mouthSize);
+        } else if (dirCol == -1) { // gauche
+            triangle(centerX, centerY, centerX - radius, centerY - radius * mouthSize, centerX - radius, centerY + radius * mouthSize);
+        } else if (dirRow == -1) { // haut
+            triangle(centerX, centerY, centerX - radius * mouthSize, centerY - radius, centerX + radius * mouthSize, centerY - radius);
+        } else if (dirRow == 1) { // bas
+            triangle(centerX, centerY, centerX - radius * mouthSize, centerY + radius, centerX + radius * mouthSize, centerY + radius);
+        }
+        // si pas de direction, pas de bouche
     }
 }
