@@ -99,4 +99,16 @@ class Board {
                 }
         }
     }   
+    // Retourne le nombre de pacgommes et super pacgommes restants
+    int getRemainingGommes() {
+        int count = 0;
+        for (int r = 0; r < rowCount; r++) {
+            for (int c = 0; c < colCount; c++) {
+                if (grid[r][c] == TypeCell.PACGOMME || grid[r][c] == TypeCell.SUPER_PACGOMME) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }

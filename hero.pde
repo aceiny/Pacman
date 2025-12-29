@@ -6,12 +6,17 @@ class Hero {
     
     private int moveDelay = MOVE_DELAY;      // combien de frames on attend avant de bouger
     private int frameCounter = FRAME_COUNTER;    // compteur des frames
+    
+    private int invincibilityFrames = 0;  // frames d'invincibilité après un hit
+    private final int INVINCIBILITY_DURATION = 60; // 1 seconde d'invincibilité
 
     private boolean isInitialized = false;
     private Board board;
+    private Game game;
 
-    Hero(Board board) {
+    Hero(Board board, Game game) {
         this.board = board;
+        this.game = game;
     }
 
     boolean isInitialized() {
@@ -45,6 +50,14 @@ class Hero {
         int[] coordsTable = {this.row, this.col};
         return coordsTable;
     }
+    
+    boolean isInvincible() {
+        return invincibilityFrames > 0;
+    }
+    
+    void setInvincible() {
+        invincibilityFrames = INVINCIBILITY_DURATION;
+    }
 
     boolean canMove(int newRow , int newCol){
         // on verifie si la nouvelle position est valide
@@ -60,6 +73,11 @@ class Hero {
         nextColDir = colDir;
     }
     void update(){
+        // on diminue les frames d'invincibilité
+        if(invincibilityFrames > 0) {
+            invincibilityFrames--;
+        }
+        
         frameCounter++;
         if(frameCounter >= moveDelay){
             frameCounter = 0;
@@ -77,8 +95,27 @@ class Hero {
                 row += dirRow;
                 col += dirCol;
             }
+            
+            // maintenant on mange ce qu'il y a dans la cellule
+            eat();
         }
     }
+    
+    void eat(){
+        TypeCell currentCell = board.grid[row][col];
+        
+        if(currentCell == TypeCell.PACGOMME){
+            board.grid[row][col] = TypeCell.EMPTY;
+            game.increaseScore(SCORE_PACGOMME);
+        }
+        else if(currentCell == TypeCell.SUPER_PACGOMME){
+            // on mange la super pac-gomme et on active le power mode
+            board.grid[row][col] = TypeCell.EMPTY;
+            game.increaseScore(SCORE_SUPER);
+            game.activatePowerMode();
+        }
+    }
+    
     void initialize() {
         if (this.isInitialized) {
             return;
@@ -115,11 +152,22 @@ class Hero {
             }
         }
     }
+    
+    void respawn() {
+        isInitialized = false ;
+        this.initialize();
+    }
 
     void display() {
         if (!isInitialized) {
             return;
         }
+        
+        // si on est invincible, on clignote (on affiche 1 frame sur 2)
+        if(isInvincible() && frameCount % 10 < 5) {
+            return;
+        }
+        
         int x = col * CELL_SIZE;
         int y = row * CELL_SIZE;
         
