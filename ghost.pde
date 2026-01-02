@@ -33,7 +33,7 @@ class Ghost {
         if (delay == 0) {
             isReleased = true;
         }
-        chooseSmartDirection();
+        chooseRandomDirection();
     }
     
     int getRow() {
@@ -122,9 +122,13 @@ class Ghost {
         }
         
         frameCounter++;
-        if (frameCounter >= moveDelay) {
+        // fantomes ralentis en mode frightened
+        int currentDelay = isFrightened() ? GHOST_FRIGHTENED_DELAY : moveDelay;
+        
+        if (frameCounter >= currentDelay) {
             frameCounter = 0;
             
+            // utilise IA intelligente (extension)
             chooseSmartDirection();
             if (canMove(row + dirRow, col + dirCol)) {
                 row += dirRow;

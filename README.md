@@ -1,76 +1,114 @@
 # Pacman Game
 
-A classic Pacman game implemented in Processing (Java).
+Jeu Pacman classique developpe en Processing (Java) pour le projet de Programmation Java.
 
-## Features
+## Fonctionnalites
 
-- **Pacman**: Animated with chomping mouth, moves with keyboard (WASD or arrow keys).
-- **Ghosts**: Intelligent AI using Dijkstra's algorithm for pathfinding. They chase Pacman optimally or flee when frightened.
-  - Sequential release: Ghosts exit one by one with timed delays
-- **Power Pellets**: Eat them to turn ghosts blue and vulnerable for a limited time.
-- **Score System**: 
+### Jeu de Base
+- **Pacman**: Controle par clavier (ZQSD ou fleches)
+- **Fantomes**: 4 fantomes avec sortie sequentielle (delais de 0, 60, 120, 180 frames)
+  - IA intelligente utilisant l'algorithme de Dijkstra (extension implementee)
+  - Ralentis pendant le mode power
+- **Pac-Gommes**: Mangez toutes les gommes pour gagner
+- **Super Pac-Gommes**: Active le mode power temporairement
+- **Systeme de Score**: 
   - Pac-Gommes: 10 points
   - Super Pac-Gommes: 50 points
-  - Bonus fruits: 500 points
-  - Ghosts: 200, 400, 800, 1600 points (multiplier during same power mode)
-- **Lives**: Start with 2 lives, lose one when caught by a ghost. Gain extra life at 10,000 points.
-- **Win/Lose Conditions**: Win by eating all pellets, lose when out of lives.
-- **Edge Wrapping**: Pac-Man can wrap around screen edges
-- **Menu System**: Press ESC to pause and access menu
-  - Resume game
-  - Restart
-  - Save game
-  - Load game
-  - View high scores
-  - Quit
-- **High Scores**: Top 5 scores saved with player names
-- **Level Loading**: Loads levels from text files
+  - Bonus: 500 points
+  - Fantomes: 200, 400, 800, 1600 points (multiplicateur pendant le meme mode power)
+- **Vies**: Commence avec 2 vies, perd une vie si touche par un fantome
+  - Vie supplementaire a 10 000 points
+- **Conditions de Fin**: Victoire si toutes les gommes mangees, defaite si 0 vie
+- **Teleportation**: Pacman peut traverser les bords du labyrinthe
 
-## How to Run
+### Menu (Touche Echap)
+- Reprendre la partie
+- Recommencer
+- Sauvegarder la partie en cours
+- Charger une partie sauvegardee
+- Consulter les meilleurs scores (Top 5)
+- Quitter
 
-### Option 1: Using Processing (Recommended for Development)
-1. Install [Processing](https://processing.org/download/).
-2. Open the `pacman.pde` file in Processing.
-3. Click the play button to run the game.
+### Systeme de Sauvegarde
+- **Meilleurs Scores**: Top 5 avec noms des joueurs (data/highscores.txt)
+- **Sauvegarde**: Possibilite de sauvegarder et charger une partie (data/save.txt)
+- **Niveaux**: Chargement depuis fichiers texte (data/levels/level1.txt)
 
-### Option 2: Running the Pre-built Binary (Linux)
-If you have the exported application:
-1. Navigate to the `bin/linux-amd64/` folder.
-2. Run the `pacman` executable:
-   ```
-   ./pacman
-   ```
-   (Make sure it's executable: `chmod +x pacman` if needed)
+## Execution
 
-This allows you to play without installing Processing.
+### Avec Processing
+1. Installer [Processing](https://processing.org/download/)
+2. Ouvrir le fichier `pacman.pde` dans Processing
+3. Cliquer sur le bouton Play
 
-## Controls
+### Binaire (Linux)
+Si l'application est exportee:
+```bash
+cd bin/linux-amd64/
+chmod +x pacman
+./pacman
+```
 
-- **Movement**: W/A/S/D or Arrow keys
-- **Restart**: Press R after game over
+## Controles
 
-## Game Mechanics
+- **Deplacement**: Z/Q/S/D ou Fleches directionnelles
+- **Menu**: Echap pour pause
+- **Recommencer**: R apres game over ou victoire
+- **Saisie du nom**: Entree pour valider, Backspace pour effacer
 
-- Eat all small pellets and power pellets to win.
-- Avoid ghosts unless you have a power pellet (they turn blue).
-- Ghosts respawn after being eaten.
-- Score extra points for eating ghosts while powered up.
+## Deroulement du Jeu
 
-## Technical Details
+1. **Debut**: 2 vies, 0 points
+2. **Deplacements**: Pac-Man se deplace le long des murs sans pouvoir les traverser
+3. **Fantomes**: Sortent un par un de leur emplacement initial
+4. **Gommes**: 
+   - Pac-Gomme: +10 points
+   - Super Pac-Gomme: +50 points + mode power
+5. **Mode Power**: Les fantomes deviennent bleus et ralentis, peuvent etre manges
+6. **Bonus**: Apparait dans le labyrinthe, +500 points
+7. **Collision**: Si touche par un fantome, perd 1 vie et repositionnement
+8. **Fin**: Victoire si toutes les gommes mangees, defaite si 0 vie
 
-- **Pathfinding**: Ghosts use Dijkstra's algorithm for optimal chasing/fleeing.
-- **Maze**: Custom grid-based layout with walls, pellets, and ghost house.
-- **AI**: Ghosts start with smart directions and recalculate paths every move.
+## Architecture
 
-## Files
+### Fichiers Principaux
+- `pacman.pde`: Boucle principale (setup, draw, keyPressed)
+- `board.pde`: Gestion du plateau de jeu et chargement des niveaux
+- `hero.pde`: Logique et deplacements de Pac-Man
+- `ghost.pde`: IA et comportement des fantomes
+- `game.pde`: Score, vies, etats du jeu
+- `menu.pde`: Menu pause avec 6 options
+- `highscores.pde`: Gestion des meilleurs scores
+- `saveload.pde`: Sauvegarde et chargement
+- `types.pde`: Enumerations (TypeCell)
+- `constants.pde`: Constantes du jeu
+- `pathfinding.pde`: Implementation de l'algorithme de Dijkstra
 
-- `pacman.pde`: Main game loop and setup.
-- `board.pde`: Maze and pellet management.
-- `hero.pde`: Pacman logic and movement.
-- `ghost.pde`: Ghost AI and behavior.
-- `game.pde`: Score, lives, and game state.
-- `types.pde`: Enums for cell types.
-- `constants.pde`: Game constants.
-- `pathfinding.pde`: Dijkstra's algorithm implementation.
+### Dossiers
+- `data/`: Fichiers de donnees
+  - `highscores.txt`: Top 5 scores
+  - `save.txt`: Sauvegarde de partie
+  - `levels/`: Fichiers de niveaux (.txt)
 
-Enjoy the game!
+## Extensions Implementees
+
+- **IA Intelligente**: Les fantomes utilisent l'algorithme de Dijkstra pour traquer ou fuir Pac-Man
+- **Comportement Adaptatif**: Les fantomes changent de strategie selon le mode power
+- **Pathfinding Optimise**: Calcul des distances avec Dijkstra pour mouvement intelligent
+
+## Format des Niveaux
+
+Fichier texte avec:
+- Ligne 1: Titre du niveau
+- Lignes suivantes: Grille avec
+  - `x`: Mur
+  - `V`: Vide
+  - `o`: Pac-Gomme
+  - `O`: Super Pac-Gomme
+  - `P`: Position Pac-Man (devient vide apres chargement)
+  - `D`: Porte fantomes (extension)
+  - `B`: Bonus (extension)
+
+---
+
+Projet realise dans le cadre du cours de Programmation Java.

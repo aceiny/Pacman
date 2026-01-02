@@ -1,5 +1,6 @@
 final int CELL_SIZE = 32;
 final int MOVE_DELAY = 6;
+final int GHOST_FRIGHTENED_DELAY = 10;
 
 final int SCORE_PACGOMME = 10;
 final int SCORE_SUPER = 50;

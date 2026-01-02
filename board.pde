@@ -31,10 +31,11 @@ class Board {
             for (int c = 0; c < min(line.length(), cols); c++) {
                 char ch = line.charAt(c);
                 switch(ch) {
-                    case 'x': case 'w': grid[r][c] = TypeCell.WALL; break;
-                    case 'V': case 'P': grid[r][c] = TypeCell.EMPTY; break;
+                    case 'x': grid[r][c] = TypeCell.WALL; break;
+                    case 'V': grid[r][c] = TypeCell.EMPTY; break;
                     case 'o': grid[r][c] = TypeCell.PACGOMME; break;
                     case 'O': grid[r][c] = TypeCell.SUPER_PACGOMME; break;
+                    case 'P': grid[r][c] = TypeCell.EMPTY; break;
                     case 'D': grid[r][c] = TypeCell.GHOST_DOOR; break;
                     case 'B': grid[r][c] = TypeCell.BONUS; break;
                     default: grid[r][c] = TypeCell.EMPTY; break;
