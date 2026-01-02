@@ -1,14 +1,14 @@
 class Hero {
     private int row;
     private int col;
-    int dirRow = 0, dirCol = 0;     // la direction actuelle de mouvement
-    int nextRowDir = 0, nextColDir = 0; // la direction qui on veut prendre apres
+    int dirRow = 0, dirCol = 0;
+    int nextRowDir = 0, nextColDir = 0;
     
-    private int moveDelay = MOVE_DELAY;      // combien de frames on attend avant de bouger
-    private int frameCounter = FRAME_COUNTER;    // compteur des frames
+    private int moveDelay = MOVE_DELAY;
+    private int frameCounter = 0;
     
-    private int invincibilityFrames = 0;  // frames d'invincibilité après un hit
-    private final int INVINCIBILITY_DURATION = 60; // 1 seconde d'invincibilité
+    private int invincibilityFrames = 0;
+    private final int INVINCIBILITY_DURATION = 60;
 
     private boolean isInitialized = false;
     private Board board;
@@ -45,11 +45,6 @@ class Hero {
     int getCol() {
         return this.col;
     }
-
-    int[] getCoords() {
-        int[] coordsTable = {this.row, this.col};
-        return coordsTable;
-    }
     
     boolean isInvincible() {
         return invincibilityFrames > 0;
@@ -59,16 +54,22 @@ class Hero {
         invincibilityFrames = INVINCIBILITY_DURATION;
     }
 
-    boolean canMove(int newRow , int newCol){
+    boolean canMove(int newRow, int newCol){
         return isValidMove(board, newRow, newCol);
     }
-
-   void setDirection(int rowDir, int colDir){
+    
+    void setDirection(int rowDir, int colDir){
         nextRowDir = rowDir;
         nextColDir = colDir;
     }
+    
+    int wrapPosition(int pos, int max) {
+        if(pos < 0) return max - 1;
+        if(pos >= max) return 0;
+        return pos;
+    }
+    
     void update(){
-        // on diminue les frames d'invincibilité
         if(invincibilityFrames > 0) {
             invincibilityFrames--;
         }
@@ -77,21 +78,24 @@ class Hero {
         if(frameCounter >= moveDelay){
             frameCounter = 0;
             
-            // d'abord on essaye de tourner dans la direction demandée
-            if(canMove(row + nextRowDir, col + nextColDir)){
+            int newRow = wrapPosition(row + nextRowDir, board.getRows());
+            int newCol = wrapPosition(col + nextColDir, board.getCols());
+            
+            if(canMove(newRow, newCol)){
                 dirRow = nextRowDir;
                 dirCol = nextColDir;
-                row += dirRow;
-                col += dirCol;
-            }
-
-            // sinon on continue tout droit dans la meme direction
-            else if(canMove(row + dirRow, col + dirCol)){
-                row += dirRow;
-                col += dirCol;
+                row = newRow;
+                col = newCol;
+            } else {
+                newRow = wrapPosition(row + dirRow, board.getRows());
+                newCol = wrapPosition(col + dirCol, board.getCols());
+                
+                if(canMove(newRow, newCol)){
+                    row = newRow;
+                    col = newCol;
+                }
             }
             
-            // maintenant on mange ce qu'il y a dans la cellule
             eat();
         }
     }
@@ -104,10 +108,13 @@ class Hero {
             game.increaseScore(SCORE_PACGOMME);
         }
         else if(currentCell == TypeCell.SUPER_PACGOMME){
-            // on mange la super pac-gomme et on active le power mode
             board.grid[row][col] = TypeCell.EMPTY;
             game.increaseScore(SCORE_SUPER);
             game.activatePowerMode();
+        }
+        else if(currentCell == TypeCell.BONUS){
+            board.grid[row][col] = TypeCell.EMPTY;
+            game.increaseScore(SCORE_BONUS);
         }
     }
     
@@ -116,7 +123,6 @@ class Hero {
             return;
         }
 
-        // on compte combien de cellules vides y a
         int emptyCount = 0;
         for (int r = 0; r < board.getRows(); r++) {
             for (int c = 0; c < board.getCols(); c++) {
@@ -126,12 +132,10 @@ class Hero {
             }
         }
         
-        // maintenant on choisit une cellule vide au hasard
         if (emptyCount > 0) {
             int targetIndex = int(random(emptyCount));
             int currentIndex = 0;
             
-            // on parcourt encore une fois pour trouver la cellule choisie
             for (int r = 0; r < board.getRows(); r++) {
                 for (int c = 0; c < board.getCols(); c++) {
                     if (board.grid[r][c] == TypeCell.EMPTY) {
@@ -158,7 +162,6 @@ class Hero {
             return;
         }
         
-        // si on est invincible, on clignote (on affiche 1 frame sur 2)
         if(isInvincible() && frameCount % 10 < 5) {
             return;
         }
@@ -169,15 +172,12 @@ class Hero {
         int centerY = y + CELL_SIZE/2;
         int radius = (CELL_SIZE - 4) / 2;
         
-        // animation de la bouche
         float mouthSize = abs(sin(frameCount * 0.1f));
         
-        // on dessine pacman comme un cercle jaune avec une bouche noire
         fill(255, 255, 0);
         noStroke();
         ellipse(centerX, centerY, CELL_SIZE - 4, CELL_SIZE - 4);
         
-        // bouche noire
         fill(0);
         noStroke();
         if (dirCol == 1) { // droite

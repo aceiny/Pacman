@@ -2,16 +2,62 @@ class Board {
     TypeCell[][] grid; 
     private int rowCount ; 
     private int colCount ;
+    private String levelTitle = "";
 
-    // Constructeur de board de jeu
+    Board(){
+        if (!loadFromFile("data/levels/level1.txt")) {
+            loadDefaultBoard();
+        }
+    }
+    
+    Board(String filename) {
+        if (!loadFromFile(filename)) {
+            loadDefaultBoard();
+        }
+    }
+    
+    boolean loadFromFile(String filename) {
+        String[] lines = loadStrings(filename);
+        if (lines == null || lines.length < 2) return false;
+        
+        levelTitle = lines[0];
+        int rows = lines.length - 1;
+        int cols = lines[1].length();
+        
+        grid = new TypeCell[rows][cols];
+        
+        for (int r = 0; r < rows; r++) {
+            String line = lines[r + 1];
+            for (int c = 0; c < min(line.length(), cols); c++) {
+                char ch = line.charAt(c);
+                switch(ch) {
+                    case 'x': case 'w': grid[r][c] = TypeCell.WALL; break;
+                    case 'V': case 'P': grid[r][c] = TypeCell.EMPTY; break;
+                    case 'o': grid[r][c] = TypeCell.PACGOMME; break;
+                    case 'O': grid[r][c] = TypeCell.SUPER_PACGOMME; break;
+                    case 'D': grid[r][c] = TypeCell.GHOST_DOOR; break;
+                    case 'B': grid[r][c] = TypeCell.BONUS; break;
+                    default: grid[r][c] = TypeCell.EMPTY; break;
+                }
+            }
+        }
+        
+        rowCount = rows;
+        colCount = cols;
+        
+        println("Niveau charge: " + levelTitle);
+        return true;
+    }
+    
+    void loadDefaultBoard() {
     final TypeCell W = TypeCell.WALL;
     final TypeCell P = TypeCell.PACGOMME;
     final TypeCell O = TypeCell.SUPER_PACGOMME;
     final TypeCell E = TypeCell.EMPTY;
     final TypeCell D = TypeCell.GHOST_DOOR;
-    final TypeCell PP = TypeCell.PACMAN;
-    Board(){
-      grid = new TypeCell[][] {
+    final TypeCell B = TypeCell.BONUS;
+    
+    grid = new TypeCell[][] {
         {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
         {W, P, P, P, P, P, P, P, P, P, P, P, P, W, W, P, P, P, P, P, P, P, P, P, P, P, P, W},
         {W, P, W, W, W, W, P, W, W, W, W, W, P, W, W, P, W, W, W, W, W, P, W, W, W, W, P, W},
@@ -23,7 +69,7 @@ class Board {
         {W, P, P, P, P, P, P, W, W, P, P, P, P, W, W, P, P, P, P, W, W, P, P, P, P, P, P, W},
         {W, W, W, W, W, W, P, W, W, W, W, W, E, W, W, E, W, W, W, W, W, P, W, W, W, W, W, W},
         {W, W, W, W, W, W, P, W, W, W, W, W, E, E, E, E, W, W, W, W, W, P, W, W, W, W, W, W},
-        {W, W, W, W, W, W, P, W, W, E, E, E, E, E, E, E, E, E, E, W, W, P, W, W, W, W, W, W},
+        {W, W, W, W, W, W, P, W, W, E, E, E, E, B, E, E, E, E, E, W, W, P, W, W, W, W, W, W},
         {W, W, W, W, W, W, P, W, W, E, W, W, D, D, D, D, W, W, E, W, W, P, W, W, W, W, W, W},
         {W, W, W, W, W, W, P, W, W, E, W, E, E, E, E, E, E, W, E, W, W, P, W, W, W, W, W, W},
         {E, E, E, E, E, E, P, E, E, E, W, E, E, E, E, E, E, W, E, E, E, P, E, E, E, E, E, E},
@@ -47,11 +93,11 @@ class Board {
         rowCount = grid.length;
         colCount = grid[0].length;
     }
-    // Retourne le nombre de lignes et de colonnes du board
+    
     int getRows(){
         return rowCount;
     }
-    // Retourne le nombre de lignes et de colonnes du board
+    
     int getCols(){
         return colCount;
     }
@@ -85,6 +131,14 @@ class Board {
                             strokeWeight(3);
                             line(x, y + CELL_SIZE/2, x + CELL_SIZE, y + CELL_SIZE/2);
                         break ;
+                        case BONUS :
+                            // dessine un bonus (fruit)
+                            fill(255, 0, 0);
+                            noStroke();
+                            ellipse(x + CELL_SIZE/2, y + CELL_SIZE/2 + 2, 12, 12);
+                            fill(0, 255, 0);
+                            rect(x + CELL_SIZE/2 - 2, y + CELL_SIZE/2 - 6, 4, 6);
+                        break;
                         default :
                         // Rien
                         break ; 

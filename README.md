@@ -6,10 +6,25 @@ A classic Pacman game implemented in Processing (Java).
 
 - **Pacman**: Animated with chomping mouth, moves with keyboard (WASD or arrow keys).
 - **Ghosts**: Intelligent AI using Dijkstra's algorithm for pathfinding. They chase Pacman optimally or flee when frightened.
+  - Sequential release: Ghosts exit one by one with timed delays
 - **Power Pellets**: Eat them to turn ghosts blue and vulnerable for a limited time.
-- **Score System**: Points for pellets, ghosts, and bonuses.
-- **Lives**: Start with 2 lives, lose one when caught by a ghost.
+- **Score System**: 
+  - Pac-Gommes: 10 points
+  - Super Pac-Gommes: 50 points
+  - Bonus fruits: 500 points
+  - Ghosts: 200, 400, 800, 1600 points (multiplier during same power mode)
+- **Lives**: Start with 2 lives, lose one when caught by a ghost. Gain extra life at 10,000 points.
 - **Win/Lose Conditions**: Win by eating all pellets, lose when out of lives.
+- **Edge Wrapping**: Pac-Man can wrap around screen edges
+- **Menu System**: Press ESC to pause and access menu
+  - Resume game
+  - Restart
+  - Save game
+  - Load game
+  - View high scores
+  - Quit
+- **High Scores**: Top 5 scores saved with player names
+- **Level Loading**: Loads levels from text files
 
 ## How to Run
 

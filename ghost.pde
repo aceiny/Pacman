@@ -13,8 +13,14 @@ class Ghost {
     private int startRow, startCol;
     private boolean isEaten = false;
     private int respawnTimer = 0;
+    private int releaseDelay;
+    private boolean isReleased = false;
     
     Ghost(Board board, Game game, Hero hero, int startRow, int startCol, color c) {
+        this(board, game, hero, startRow, startCol, c, 0);
+    }
+    
+    Ghost(Board board, Game game, Hero hero, int startRow, int startCol, color c, int delay) {
         this.board = board;
         this.game = game;
         this.hero = hero;
@@ -23,6 +29,10 @@ class Ghost {
         this.startRow = startRow;
         this.startCol = startCol;
         this.ghostColor = c;
+        this.releaseDelay = delay;
+        if (delay == 0) {
+            isReleased = true;
+        }
         chooseSmartDirection();
     }
     
@@ -34,19 +44,22 @@ class Ghost {
         return this.col;
     }
     
+    void setPosition(int r, int c) {
+        this.row = r;
+        this.col = c;
+    }
+    
     boolean canMove(int newRow, int newCol) {
         return isValidMove(board, newRow, newCol);
     }
     
     void chooseRandomDirection() {
-        int[] directions = {0, 1, 2, 3};
-        int choice = directions[int(random(4))];
-        
+        int choice = int(random(4));
         switch(choice) {
-            case 0: dirRow = -1; dirCol = 0; break;  // haut
-            case 1: dirRow = 1; dirCol = 0; break;   // bas
-            case 2: dirRow = 0; dirCol = -1; break;  // gauche
-            case 3: dirRow = 0; dirCol = 1; break;   // droite
+            case 0: dirRow = -1; dirCol = 0; break;
+            case 1: dirRow = 1; dirCol = 0; break;
+            case 2: dirRow = 0; dirCol = -1; break;
+            case 3: dirRow = 0; dirCol = 1; break;
         }
     }
     
@@ -54,10 +67,7 @@ class Ghost {
         int heroRow = hero.getRow();
         int heroCol = hero.getCol();
         
-        // Utiliser Dijkstra pour calculer les distances
         int[][] dist = computeDistances(board, heroRow, heroCol);
-        
-        // directions possibles
         int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         float bestValue = isFrightened() ? -Float.MAX_VALUE : Float.MAX_VALUE;
         int bestDir = -1;
@@ -66,7 +76,6 @@ class Ghost {
             int newRow = row + dirs[i][0];
             int newCol = col + dirs[i][1];
             
-            // eviter de revenir en arriere immediatement
             if (dirs[i][0] == -dirRow && dirs[i][1] == -dirCol) continue;
             
             if (canMove(newRow, newCol)) {
@@ -94,7 +103,14 @@ class Ghost {
     }
     
     void update() {
-        // si le fantome est mange, on attend avant de respawn
+        if(!isReleased) {
+            releaseDelay--;
+            if(releaseDelay <= 0) {
+                isReleased = true;
+            }
+            return;
+        }
+        
         if(isEaten){
             respawnTimer--;
             if(respawnTimer <= 0){
@@ -109,13 +125,11 @@ class Ghost {
         if (frameCounter >= moveDelay) {
             frameCounter = 0;
             
-            // Choisir la meilleure direction à chaque mouvement
             chooseSmartDirection();
             if (canMove(row + dirRow, col + dirCol)) {
                 row += dirRow;
                 col += dirCol;
             } else {
-                // Si bloqué, essayer une direction aléatoire
                 chooseRandomDirection();
                 if (canMove(row + dirRow, col + dirCol)) {
                     row += dirRow;
@@ -126,6 +140,16 @@ class Ghost {
     }
     
     void display() {
+        // pas encore sorti
+        if (!isReleased) {
+            int x = col * CELL_SIZE;
+            int y = row * CELL_SIZE;
+            fill(ghostColor, 100);
+            noStroke();
+            ellipse(x + CELL_SIZE/2, y + CELL_SIZE/2, CELL_SIZE - 4, CELL_SIZE - 4);
+            return;
+        }
+        
         // si le fantome est mange, on l'affiche pas
         if(isEaten){
             return;
@@ -134,11 +158,11 @@ class Ghost {
         int x = col * CELL_SIZE;
         int y = row * CELL_SIZE;
         
-            // Choisit la couleur du fantome en fonction de son statut
-        // si on est en power mode, les fantomes deviennent bleus 
+        // Choisit la couleur du fantome de son statut
+        // si pacman est en power mode, les fantomes deviennent bleu 
         if(game.isPowerMode()){
             if(game.getPowerModeFrames() < 90 && frameCount % 20 < 10){
-                fill(255, 255, 255); // blanc quand ça clignote
+                fill(255, 255, 255); // blanc quand ca clignote
             } else {
                 fill(0, 0, 255); // bleu en mode frightened
             }
