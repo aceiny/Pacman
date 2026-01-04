@@ -32,13 +32,13 @@ class SaveLoad {
             for (int c = 0; c < board.getCols(); c++) {
                 TypeCell cell = board.grid[r][c];
                 switch(cell) {
-                    case WALL: row += "W"; break;
-                    case EMPTY: row += "E"; break;
-                    case PACGOMME: row += "P"; break;
-                    case SUPER_PACGOMME: row += "S"; break;
+                    case WALL: row += "x"; break;
+                    case EMPTY: row += "V"; break;
+                    case PACGOMME: row += "o"; break;
+                    case SUPER_PACGOMME: row += "O"; break;
                     case GHOST_DOOR: row += "D"; break;
                     case BONUS: row += "B"; break;
-                    default: row += "E"; break;
+                    default: row += "V"; break;
                 }
             }
             lines.add(row);
@@ -108,10 +108,10 @@ class SaveLoad {
                     for (int c = 0; c < min(rowData.length(), board.getCols()); c++) {
                         char ch = rowData.charAt(c);
                         switch(ch) {
-                            case 'W': board.grid[row][c] = TypeCell.WALL; break;
-                            case 'E': board.grid[row][c] = TypeCell.EMPTY; break;
-                            case 'P': board.grid[row][c] = TypeCell.PACGOMME; break;
-                            case 'S': board.grid[row][c] = TypeCell.SUPER_PACGOMME; break;
+                            case 'x': board.grid[row][c] = TypeCell.WALL; break;
+                            case 'V': board.grid[row][c] = TypeCell.EMPTY; break;
+                            case 'o': board.grid[row][c] = TypeCell.PACGOMME; break;
+                            case 'O': board.grid[row][c] = TypeCell.SUPER_PACGOMME; break;
                             case 'D': board.grid[row][c] = TypeCell.GHOST_DOOR; break;
                             case 'B': board.grid[row][c] = TypeCell.BONUS; break;
                         }

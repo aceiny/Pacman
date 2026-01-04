@@ -1,4 +1,3 @@
-// gerer les meilleurs scores
 class HighScores {
     private String[] playerNames;
     private int[] scores;

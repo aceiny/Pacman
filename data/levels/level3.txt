@@ -1,4 +1,4 @@
-Niveau 3 - Spirale
+Niveau 3 - 3
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xooooooooooooooooooooooooooox
 xoxxxxxxxxxxxxxxxxxxxxxxoxxx
@@ -9,14 +9,14 @@ xxxxxxxxxxxxxxxxxxxxoxxxxxox
 xooooooooooooooooooooooooxxox
 xoxxxxxxxxxxxxxxxxxxxxxxoxxx
 xoxxxxxxxxxxxxxxxxxxxxxxoxxx
-VVVooooooooVVwwwwwVVoooooVVV
-xxxxxxxoxxxxwwwwwwxxxxoxxxxx
-xxxxxxxoxxxxwVVVVwxxxxoxxxxx
-xxxxxxxoxxxxwVVVVwxxxxoxxxxx
-VVVVVVVoVVVVwVPVVwVVVVoVVVVV
-xxxxxxxoxxxxwVVVVwxxxxoxxxxx
-xxxxxxxoxxxxwVVVVwxxxxoxxxxx
-VVVoooooooooVVwwwwVVoooooVVV
+VVVooooooooVVxxxxxxVVoooooVVV
+xxxxxxxoxxxxxxxxxxxxxxxxxxxxox
+xxxxxxxoxxxxVVVVVVxxxxoxxxxx
+xxxxxxxoxxxxVVVVVVxxxxoxxxxx
+VVVVVVVoVVVVVVPVVVVVVVoVVVVV
+xxxxxxxoxxxxVVVVVVxxxxoxxxxx
+xxxxxxxoxxxxVVVVVVxxxxoxxxxx
+VVVooooooooVVxxxxxxVVoooooVVV
 xoxxxxxxxxxxxxxxxxxxxxxxoxxx
 xoxxxxxxxxxxxxxxxxxxxxxxoxxx
 xooooooooooooooooooooooooxxox
@@ -26,7 +26,7 @@ xOoooooooooooooooooooooooxxOx
 xoxxxxxxxxxxxxxxxxxxxxxxoxxx
 xoxxxxxxxxxxxxxxxxxxxxxxoxxx
 xooooooooooooooooooooooooooox
-xoxxxxxxxxxxxxxxxxxxxxxxxox
-xoxxxxxxxxxxxxxxxxxxxxxxxox
+xoxxxxxxxxxxxxxxxxxxxxxxoxxx
+xoxxxxxxxxxxxxxxxxxxxxxxoxxx
 xooooooooooooooooooooooooooox
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -1,4 +1,3 @@
-// classe pour gerer le menu du jeu
 class Menu {
     private boolean isVisible;
     private int selectedOption;

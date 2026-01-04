@@ -17,6 +17,7 @@ void settings(){
 void setup(){
     background(0);
     board = new Board();
+    windowResized();
     game = new Game(board);
     hero = new Hero(board, game);
     menu = new Menu();
@@ -288,3 +289,4 @@ void restartGame() {
     ghosts[2] = new Ghost(board, game, hero, 14, 13, color(0, 255, 255), 120);
     ghosts[3] = new Ghost(board, game, hero, 14, 14, color(255, 184, 82), 180);
 }
+

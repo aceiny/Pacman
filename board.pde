@@ -5,7 +5,7 @@ class Board {
     private String levelTitle = "";
 
     Board(){
-        if (!loadFromFile("data/levels/level1.txt")) {
+        if (!loadFromFile("data/levels/level4.txt")) {
             loadDefaultBoard();
         }
     }
@@ -35,11 +35,15 @@ class Board {
                     case 'V': grid[r][c] = TypeCell.EMPTY; break;
                     case 'o': grid[r][c] = TypeCell.PACGOMME; break;
                     case 'O': grid[r][c] = TypeCell.SUPER_PACGOMME; break;
-                    case 'P': grid[r][c] = TypeCell.EMPTY; break;
+                    case 'P': grid[r][c] = TypeCell.EMPTY; break; 
                     case 'D': grid[r][c] = TypeCell.GHOST_DOOR; break;
                     case 'B': grid[r][c] = TypeCell.BONUS; break;
                     default: grid[r][c] = TypeCell.EMPTY; break;
                 }
+            }
+            // complete la ligne si elle est plus courte que le nombre de colonnes
+            for (int c = line.length(); c < cols; c++) {
+                grid[r][c] = TypeCell.EMPTY;
             }
         }
         

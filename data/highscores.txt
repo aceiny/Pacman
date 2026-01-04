@@ -1,5 +1,5 @@
+r:7800
+yacine:7070
 yacine:5330
 yaxine:2060
-yacine:1440
-yacine:1010
-rrrr:640
+r:2060

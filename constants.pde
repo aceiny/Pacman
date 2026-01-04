@@ -1,4 +1,5 @@
-final int CELL_SIZE = 32;
+int CELL_SIZE = 32;
+final int MIN_CELL_SIZE = 4;
 final int MOVE_DELAY = 6;
 final int GHOST_FRIGHTENED_DELAY = 10;
 
