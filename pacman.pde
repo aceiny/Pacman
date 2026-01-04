@@ -36,7 +36,6 @@ void setup(){
 
 void draw(){
     background(0);
-    
     // si on demande le nom du joueur
     if (askingForName) {
         drawNameInput();
@@ -64,7 +63,7 @@ void draw(){
         }
         return;
     }
-
+    
     // victoire
     if (game.isGameWin()) {
         game.displayGameOverWin();
@@ -76,7 +75,7 @@ void draw(){
     
     // si le menu est ouvert, on met en pause
     if (menu.isShowing()) {
-        // dessine quand meme le jeu en arriere plan
+        // dessine le jeu en arriere plan
         board.display();
         for (int i = 0; i < ghosts.length; i++) {
             ghosts[i].display();
@@ -85,7 +84,6 @@ void draw(){
         
         drawGameInfo();
         
-        // affiche le menu par dessus
         menu.display();
         return;
     }
@@ -107,13 +105,13 @@ void draw(){
             if(ghosts[i].isFrightened()){
                 // en power mode, on mange le fantome
                 ghosts[i].getEaten();
-                // incremente le score avec multiplicateur
+                // incremente le score 
                 int ghostScore = game.getGhostScore();
                 game.increaseScore(ghostScore);
             } else if(!hero.isInvincible()) {
                 // sinon le fantome nous mange
                 game.decreaseLives();
-                // on rend pacman invincible pour quelques instants
+                // on rend pacman invincible 
 
                 hero.setInvincible();
                 if(!game.isGameOver()){
@@ -279,8 +277,9 @@ void handleMenuSelection() {
 }
 
 void restartGame() {
-    game.reset();
     board = new Board();
+    game.reset();
+    game.board = board; 
     hero = new Hero(board, game);
     hero.initialize();
     

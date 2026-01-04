@@ -130,7 +130,7 @@ class Hero {
                     emptyCount++;
                 }
             }
-        }
+        }        
         
         if (emptyCount > 0) {
             int targetIndex = int(random(emptyCount));

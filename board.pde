@@ -5,9 +5,11 @@ class Board {
     private String levelTitle = "";
 
     Board(){
-        if (!loadFromFile("data/levels/level4.txt")) {
-            loadDefaultBoard();
-        }
+        loadDefaultBoard();
+        // IMPRTANT : decommenter les lignes suivantes pour change le niveau
+        // if (!loadFromFile("data/levels/level1.txt")) {
+        //     loadDefaultBoard();
+        // }
     }
     
     Board(String filename) {
