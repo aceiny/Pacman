@@ -1,5 +1,5 @@
-r:9120
-r:7800
-zeraibi:7520
-r:7390
-yacine:7070
+zeraibi:12250
+ahmed:9120
+RDS:8620
+RD:8120
+yassine:7800
