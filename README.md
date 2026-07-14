@@ -34,6 +34,12 @@ Jeu Pacman classique developpe en Processing (Java) pour le projet de Programmat
 - **Sauvegarde**: Possibilite de sauvegarder et charger une partie (data/save.txt)
 - **Niveaux**: Chargement depuis fichiers texte (data/levels/level1.txt)
 
+## Screenshots
+
+![Screenshot 1](./assets/screenshot1.png)
+![Screenshot 2](./assets/screenshot2.png)
+![Screenshot 3](./assets/screenshot3.png)
+
 ## Execution
 
 ### Avec Processing
